@@ -150,6 +150,28 @@ namespace DJWinOptimizer.Services
                     _log.Warn($"Audio apply: {audioErr}");
                 // Launch programs
                 Core.App.Instance!.Launcher.Launch(profile.Programs?.LaunchOnEnter ?? new());
+                
+                // Package manager actions (install/uninstall software)
+                if (profile.PackageActions != null && profile.PackageActions.Count > 0)
+                {
+                    var packageResults = Core.App.Instance!.PackageManager.ExecuteActions(profile.PackageActions);
+                    foreach (var result in packageResults)
+                    {
+                        if (!result.Success)
+                            _log.Warn($"Package action failed for {result.PackageId}: {result.ErrorMessage}");
+                    }
+                }
+                
+                // System tweaks actions
+                if (profile.TweakActions != null && profile.TweakActions.Count > 0)
+                {
+                    var tweakResults = Core.App.Instance!.SystemTweaks.ExecuteActions(profile.TweakActions);
+                    foreach (var result in tweakResults)
+                    {
+                        if (!result.Success)
+                            _log.Warn($"Tweak action failed for {result.TweakId}: {result.ErrorMessage}");
+                    }
+                }
 
                 ActiveProfile = profile;
                 _log.Info($"Applied profile '{profile.Name}'.");
@@ -178,6 +200,22 @@ namespace DJWinOptimizer.Services
                 Core.App.Instance!.ProcPriority.Revert(profile.ProcessPriorities);
                 // Restore timer resolution to stock
                 try { Core.App.Instance!.TimerResolution.SetOneMillisecond(false); } catch { }
+                
+                // Undo system tweaks
+                if (profile.TweakActions != null && profile.TweakActions.Count > 0)
+                {
+                    var undoActions = profile.TweakActions.Select(t => new TweakAction 
+                    { 
+                        TweakId = t.TweakId, 
+                        Action = TweakActionType.Undo 
+                    }).ToList();
+                    var tweakResults = Core.App.Instance!.SystemTweaks.ExecuteActions(undoActions);
+                    foreach (var result in tweakResults)
+                    {
+                        if (!result.Success)
+                            _log.Warn($"Tweak undo failed for {result.TweakId}: {result.ErrorMessage}");
+                    }
+                }
             }
             catch (Exception ex)
             {

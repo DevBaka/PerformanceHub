@@ -19,6 +19,8 @@ namespace DJWinOptimizer.Core.Models
         public AudioOptimizations Audio { get; set; } = new();
         public TimerResolutionMode TimerResolution { get; set; } = TimerResolutionMode.Stock;
         public ProgramSets Programs { get; set; } = new();
+        public List<PackageManagerAction> PackageActions { get; set; } = new();
+        public List<TweakAction> TweakActions { get; set; } = new();
     }
 
     public class AudioOptimizations

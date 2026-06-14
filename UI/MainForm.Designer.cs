@@ -12,6 +12,8 @@ namespace DJWinOptimizer.UI
         private TabPage tabLogs;
         private TabPage tabSettings;
         private TabPage tabEditor;
+        private TabPage tabSoftwareManager;
+        private TabPage tabTweaks;
         private NotifyIcon trayIcon;
         private ContextMenuStrip trayMenu;
         private StatusStrip statusStrip;
@@ -127,6 +129,8 @@ namespace DJWinOptimizer.UI
             tabAutoSwitch = new TabPage();
             tabLogs = new TabPage();
             tabSettings = new TabPage();
+            tabSoftwareManager = new TabPage();
+            tabTweaks = new TabPage();
             trayIcon = new NotifyIcon(components);
             trayMenu = new ContextMenuStrip(components);
             statusStrip = new StatusStrip();
@@ -144,7 +148,7 @@ namespace DJWinOptimizer.UI
 
             // TabControl
             tabControl.Dock = DockStyle.Fill;
-            tabControl.TabPages.AddRange(new[] { tabProfiles, tabEditor, tabMonitoring, tabAutoSwitch, tabLogs, tabSettings });
+            tabControl.TabPages.AddRange(new[] { tabProfiles, tabEditor, tabMonitoring, tabAutoSwitch, tabLogs, tabSettings, tabSoftwareManager, tabTweaks });
 
             // Profiles Tab
             tabProfiles.Text = "Profiles";
@@ -423,6 +427,12 @@ namespace DJWinOptimizer.UI
 
             // Settings Tab
             tabSettings.Text = "Settings";
+
+            // Software Manager Tab
+            tabSoftwareManager.Text = "Software Manager";
+
+            // Tweaks Tab
+            tabTweaks.Text = "System Tweaks";
             chkStartMinimized = new CheckBox { Text = "Start minimized to tray", AutoSize = true, Location = new System.Drawing.Point(10, 10) };
             chkAutoStartAutoSwitch = new CheckBox { Text = "Auto start Auto-Switch", AutoSize = true, Location = new System.Drawing.Point(10, 40) };
             chkStartWithWindows = new CheckBox { Text = "Start with Windows (current user)", AutoSize = true, Location = new System.Drawing.Point(10, 70) };

@@ -9,6 +9,7 @@ namespace DJWinOptimizer.Services
     {
         private readonly string _logFile;
         private readonly object _lock = new();
+        public event Action<string>? OnLog;
 
         public FileLogger()
         {
@@ -31,7 +32,10 @@ namespace DJWinOptimizer.Services
             {
                 try
                 {
-                    File.AppendAllText(_logFile, $"[{DateTime.Now:HH:mm:ss}] {level} {message}{Environment.NewLine}");
+                    var logLine = $"[{DateTime.Now:HH:mm:ss}] {level} {message}";
+                    File.AppendAllText(_logFile, logLine + Environment.NewLine);
+                    OnLog?.Invoke(logLine);
+                    DJWinOptimizer.Core.App.InvokeLog(logLine);
                 }
                 catch { /* never crash on logging */ }
             }

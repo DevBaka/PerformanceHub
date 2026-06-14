@@ -11,5 +11,14 @@
     <Compile Update="UI\ProfileEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="UI\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\SoftwareManagerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\TweaksControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -65,9 +65,22 @@ namespace DJWinOptimizer.UI
         private long _prevEtwMatched;
         private DateTime _prevEtwTs = DateTime.MinValue;
         private readonly System.Collections.Generic.Dictionary<string, (int Count, DateTime Ts)> _prevDriverCounts = new();
+        
+        // Cached controls
+        private SoftwareManagerControl? _softwareManagerControl;
+        private TweaksControl? _tweaksControl;
+
         public MainForm()
         {
             InitializeComponent();
+            
+            // Subscribe to static app logger events for UI display
+            App.SubscribeToLogs(OnLogMessage);
+            App.Instance!.Logger.Info("MainForm initialized - logging connected");
+            App.Instance!.Logger.Info($"Logger type: {App.Instance!.Logger.GetType().Name}");
+            App.Instance!.Logger.Info($"PackageManager: {App.Instance!.PackageManager?.GetType().Name}");
+            App.Instance!.Logger.Info($"SystemTweaks: {App.Instance!.SystemTweaks?.GetType().Name}");
+            
             // Enable copy support on Driver Latencies list
             InitListViewCopy(lvDrivers);
             // Ensure Events/s column exists for Driver Latencies
@@ -198,6 +211,9 @@ namespace DJWinOptimizer.UI
             InitSettingsUI();
             UpdateAdminStatus();
 
+            // Tab selection handler for new forms - lazy load controls
+            tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
+
             // Init monitoring loop
             InitMonitoring();
 
@@ -213,6 +229,71 @@ namespace DJWinOptimizer.UI
                 try { _hw?.Close(); } catch { }
                 try { _drvMon?.Dispose(); } catch { }
             };
+        }
+
+        private void OnLogMessage(string logLine)
+        {
+            try
+            {
+                if (txtLog != null && !txtLog.IsDisposed)
+                {
+                    if (txtLog.InvokeRequired)
+                    {
+                        txtLog.Invoke((MethodInvoker)delegate
+                        {
+                            txtLog.AppendText(logLine + Environment.NewLine);
+                            txtLog.SelectionStart = txtLog.Text.Length;
+                            txtLog.ScrollToCaret();
+                        });
+                    }
+                    else
+                    {
+                        txtLog.AppendText(logLine + Environment.NewLine);
+                        txtLog.SelectionStart = txtLog.Text.Length;
+                        txtLog.ScrollToCaret();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Log error: {ex.Message}");
+            }
+        }
+
+        private void TabControl_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (tabControl.SelectedTab == tabSoftwareManager)
+            {
+                if (_softwareManagerControl == null || _softwareManagerControl.IsDisposed)
+                {
+                    try
+                    {
+                        _softwareManagerControl = new SoftwareManagerControl(App.Instance!.PackageManager, App.Instance!.Logger);
+                        tabSoftwareManager.Controls.Clear();
+                        tabSoftwareManager.Controls.Add(_softwareManagerControl);
+                    }
+                    catch (Exception ex)
+                    {
+                        App.Instance!.Logger.Error("Failed to initialize SoftwareManagerControl", ex);
+                    }
+                }
+            }
+            else if (tabControl.SelectedTab == tabTweaks)
+            {
+                if (_tweaksControl == null || _tweaksControl.IsDisposed)
+                {
+                    try
+                    {
+                        _tweaksControl = new TweaksControl(App.Instance!.SystemTweaks, App.Instance!.Logger);
+                        tabTweaks.Controls.Clear();
+                        tabTweaks.Controls.Add(_tweaksControl);
+                    }
+                    catch (Exception ex)
+                    {
+                        App.Instance!.Logger.Error("Failed to initialize TweaksControl", ex);
+                    }
+                }
+            }
         }
 
         // =====================

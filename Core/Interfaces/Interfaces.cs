@@ -89,4 +89,20 @@ namespace DJWinOptimizer.Core.Interfaces
         void CheckAudioDevices();
         bool TryRecoverAudioGraph(out string? error);
     }
+
+    public interface IPackageManager
+    {
+        IEnumerable<PackageApplication> GetAvailableApplications();
+        bool IsWingetAvailable();
+        bool IsChocolateyAvailable();
+        List<PackageManagerResult> ExecuteActions(IEnumerable<PackageManagerAction> actions);
+        bool InstallChocolatey();
+    }
+
+    public interface ISystemTweaksManager
+    {
+        IEnumerable<SystemTweak> GetAvailableTweaks();
+        List<TweakResult> ExecuteActions(IEnumerable<TweakAction> actions);
+        bool IsTweakApplied(string tweakId);
+    }
 }

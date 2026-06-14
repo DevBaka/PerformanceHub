@@ -15,10 +15,12 @@ namespace DJWinOptimizer
 
             bool createdNew = false;
             _singleInstanceMutex = new Mutex(true, "Global/DJWinOptimizer_SingleInstance", out createdNew);
+            
+            // For elevated relaunch, wait a bit longer for the old instance to close
             if (!createdNew && elevatedRelaunch)
             {
                 // Old instance may still be shutting down; wait briefly and retry to avoid false 'already running'
-                for (int i = 0; i < 20 && !createdNew; i++)
+                for (int i = 0; i < 30 && !createdNew; i++) // Increased retries for elevated relaunch
                 {
                     try { _singleInstanceMutex?.Dispose(); } catch { }
                     Thread.Sleep(500);
@@ -32,7 +34,7 @@ namespace DJWinOptimizer
                     createdNew = true; // treat as allowed
                 }
             }
-            if (!createdNew)
+            else if (!createdNew)
             {
                 MessageBox.Show("DJ Win Optimizer is already running.", "Already Running", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;

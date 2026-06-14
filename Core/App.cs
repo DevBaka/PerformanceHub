@@ -11,11 +11,43 @@ namespace DJWinOptimizer.Core
     public sealed class App
     {
         public static App? Instance { get; private set; }
+        private static event Action<string>? OnLog;
+        private static readonly List<string> _logBuffer = new();
+
         public static void Init()
         {
             if (Instance != null) return;
             PortablePaths.Initialize();
             Instance = new App();
+        }
+
+        public static void SubscribeToLogs(Action<string> onLog)
+        {
+            OnLog += onLog;
+            // Send buffered logs
+            lock (_logBuffer)
+            {
+                foreach (var logLine in _logBuffer)
+                {
+                    onLog(logLine);
+                }
+                _logBuffer.Clear();
+            }
+        }
+
+        internal static void InvokeLog(string logLine)
+        {
+            lock (_logBuffer)
+            {
+                if (OnLog == null || OnLog.GetInvocationList().Length == 0)
+                {
+                    _logBuffer.Add(logLine);
+                }
+                else
+                {
+                    OnLog?.Invoke(logLine);
+                }
+            }
         }
 
         public ILogger Logger { get; }
@@ -30,6 +62,8 @@ namespace DJWinOptimizer.Core
         public IProcessLauncher Launcher { get; }
         public IPreFlightChecker Preflight { get; }
         public IAudioManager Audio { get; }
+        public IPackageManager PackageManager { get; }
+        public ISystemTweaksManager SystemTweaks { get; }
         public DJWinOptimizer.Settings.AppSettings Config { get; }
 
         private App()
@@ -47,6 +81,8 @@ namespace DJWinOptimizer.Core
             Launcher = new ProcessLauncher(Logger);
             Preflight = new PreFlightChecker(Logger);
             Audio = new AudioManager(Logger);
+            PackageManager = new PackageManager(Logger);
+            SystemTweaks = new SystemTweaksManager(Logger);
         }
 
         public void Shutdown()
