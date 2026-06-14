@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace DJWinOptimizer.UI
+namespace PerformanceHub.UI
 {
     partial class ProcessPickerForm
     {

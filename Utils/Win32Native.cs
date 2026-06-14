@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DJWinOptimizer.Utils
+namespace PerformanceHub.Utils
 {
     internal static class Win32Native
     {

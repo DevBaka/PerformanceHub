@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using DJWinOptimizer.Core.Models;
-using DJWinOptimizer.Core;
+using PerformanceHub.Core.Models;
+using PerformanceHub.Core;
 
-namespace DJWinOptimizer.UI
+namespace PerformanceHub.UI
 {
     public partial class ProfileEditorForm : Form
     {

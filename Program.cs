@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace DJWinOptimizer
+namespace PerformanceHub
 {
     internal static class Program
     {
@@ -14,7 +14,7 @@ namespace DJWinOptimizer
             bool elevatedRelaunch = Array.Exists(args, a => string.Equals(a, "--elevated", StringComparison.OrdinalIgnoreCase));
 
             bool createdNew = false;
-            _singleInstanceMutex = new Mutex(true, "Global/DJWinOptimizer_SingleInstance", out createdNew);
+            _singleInstanceMutex = new Mutex(true, "Global/PerformanceHub_SingleInstance", out createdNew);
             
             // For elevated relaunch, wait a bit longer for the old instance to close
             if (!createdNew && elevatedRelaunch)
@@ -24,7 +24,7 @@ namespace DJWinOptimizer
                 {
                     try { _singleInstanceMutex?.Dispose(); } catch { }
                     Thread.Sleep(500);
-                    _singleInstanceMutex = new Mutex(true, "Global/DJWinOptimizer_SingleInstance", out createdNew);
+                    _singleInstanceMutex = new Mutex(true, "Global/PerformanceHub_SingleInstance", out createdNew);
                 }
                 // If still not createdNew after retries, proceed without showing message to allow elevation handoff
                 if (!createdNew)
@@ -36,26 +36,26 @@ namespace DJWinOptimizer
             }
             else if (!createdNew)
             {
-                MessageBox.Show("DJ Win Optimizer is already running.", "Already Running", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("PerformanceHub is already running.", "Already Running", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-            Application.ApplicationExit += (_, __) => Core.App.Instance?.Shutdown();
-            Core.App.Init();
+            Application.ApplicationExit += (_, __) => PerformanceHub.Core.App.Instance?.Shutdown();
+            PerformanceHub.Core.App.Init();
 
             // Global exception handlers for failsafe logging
             Application.ThreadException += (s, e) =>
             {
-                try { Core.App.Instance?.Logger.Error("UI thread exception", e.Exception); } catch { }
+                try { PerformanceHub.Core.App.Instance?.Logger.Error("UI thread exception", e.Exception); } catch { }
             };
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
-                try { Core.App.Instance?.Logger.Error("Unhandled exception", e.ExceptionObject as Exception); } catch { }
+                try { PerformanceHub.Core.App.Instance?.Logger.Error("Unhandled exception", e.ExceptionObject as Exception); } catch { }
             };
-            Application.Run(new UI.MainForm());
+            Application.Run(new PerformanceHub.UI.MainForm());
 
             // Release mutex when app exits
             try { _singleInstanceMutex?.ReleaseMutex(); } catch { }

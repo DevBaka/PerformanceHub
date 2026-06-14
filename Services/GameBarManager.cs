@@ -1,9 +1,9 @@
-using DJWinOptimizer.Core.Interfaces;
+using PerformanceHub.Core.Interfaces;
 using System.Linq;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Utils;
 using Microsoft.Win32;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class GameBarManager : IGameBarManager
     {

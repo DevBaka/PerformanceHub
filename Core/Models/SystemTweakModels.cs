@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DJWinOptimizer.Core.Models
+namespace PerformanceHub.Core.Models
 {
     public class SystemTweak
     {

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace DJWinOptimizer.Utils
+namespace PerformanceHub.Utils
 {
     public static class PortablePaths
     {

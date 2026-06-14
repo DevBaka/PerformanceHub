@@ -5,12 +5,12 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using LibreHardwareMonitor.Hardware;
-using DJWinOptimizer.Core;
-using DJWinOptimizer.Core.Models;
-using DJWinOptimizer.Utils;
-using DJWinOptimizer.Services;
+using PerformanceHub.Core;
+using PerformanceHub.Core.Models;
+using PerformanceHub.Utils;
+using PerformanceHub.Services;
 
-namespace DJWinOptimizer.UI
+namespace PerformanceHub.UI
 {
     public partial class MainForm : Form
     {
@@ -113,7 +113,7 @@ namespace DJWinOptimizer.UI
                             if (cfg != null)
                             {
                                 cfg.Monitoring.ShowSystemEtwRows = miShowSystem.Checked;
-                                DJWinOptimizer.Settings.AppSettings.Save(cfg);
+                                PerformanceHub.Settings.AppSettings.Save(cfg);
                             }
                         }
                         catch { }
@@ -363,7 +363,7 @@ namespace DJWinOptimizer.UI
         // =====================
         // Autostart editor
         // =====================
-        private void EditorAutoRefreshList(System.Collections.Generic.IEnumerable<DJWinOptimizer.Core.Models.ProgramAction>? items)
+        private void EditorAutoRefreshList(System.Collections.Generic.IEnumerable<PerformanceHub.Core.Models.ProgramAction>? items)
         {
             if (lstAutoStart == null) return;
             lstAutoStart.Items.Clear();
@@ -383,20 +383,20 @@ namespace DJWinOptimizer.UI
             }
         }
 
-        private System.Collections.Generic.List<DJWinOptimizer.Core.Models.ProgramAction> EditorAutoCollectItems()
+        private System.Collections.Generic.List<PerformanceHub.Core.Models.ProgramAction> EditorAutoCollectItems()
         {
-            var list = new System.Collections.Generic.List<DJWinOptimizer.Core.Models.ProgramAction>();
+            var list = new System.Collections.Generic.List<PerformanceHub.Core.Models.ProgramAction>();
             if (lstAutoStart == null) return list;
             foreach (ListViewItem it in lstAutoStart.Items)
             {
-                if (it.Tag is DJWinOptimizer.Core.Models.ProgramAction a)
+                if (it.Tag is PerformanceHub.Core.Models.ProgramAction a)
                 {
                     list.Add(a);
                 }
                 else
                 {
                     // Fallback parse from columns
-                    var pa = new DJWinOptimizer.Core.Models.ProgramAction
+                    var pa = new PerformanceHub.Core.Models.ProgramAction
                     {
                         Path = it.SubItems.Count > 0 ? it.SubItems[0].Text : null,
                         Args = it.SubItems.Count > 1 ? it.SubItems[1].Text : null,
@@ -423,7 +423,7 @@ namespace DJWinOptimizer.UI
         {
             if (lstAutoStart == null || lstAutoStart.SelectedItems.Count == 0) return;
             var it = lstAutoStart.SelectedItems[0];
-            var orig = it.Tag as DJWinOptimizer.Core.Models.ProgramAction;
+            var orig = it.Tag as PerformanceHub.Core.Models.ProgramAction;
             var updated = EditorAutoPrompt(orig);
             if (updated == null) return;
             it.SubItems[0].Text = updated.Path ?? string.Empty;
@@ -453,7 +453,7 @@ namespace DJWinOptimizer.UI
             item.Selected = true;
         }
 
-        private DJWinOptimizer.Core.Models.ProgramAction? EditorAutoPrompt(DJWinOptimizer.Core.Models.ProgramAction? original)
+        private PerformanceHub.Core.Models.ProgramAction? EditorAutoPrompt(PerformanceHub.Core.Models.ProgramAction? original)
         {
             // Lightweight modal editor
             var dlg = new Form
@@ -498,7 +498,7 @@ namespace DJWinOptimizer.UI
 
             var result = dlg.ShowDialog(this);
             if (result != DialogResult.OK) { dlg.Dispose(); return null; }
-            var pa = original ?? new DJWinOptimizer.Core.Models.ProgramAction();
+            var pa = original ?? new PerformanceHub.Core.Models.ProgramAction();
             pa.Path = string.IsNullOrWhiteSpace(txtPath.Text) ? null : txtPath.Text.Trim();
             pa.Args = string.IsNullOrWhiteSpace(txtArgs.Text) ? null : txtArgs.Text.Trim();
             pa.SkipIfRunning = chkSkip.Checked;
@@ -510,12 +510,12 @@ namespace DJWinOptimizer.UI
             return pa;
         }
 
-        private void TryApplyServiceTagsToEditor(DJWinOptimizer.Core.Models.ServiceToggles svc)
+        private void TryApplyServiceTagsToEditor(PerformanceHub.Core.Models.ServiceToggles svc)
         {
             try
             {
                 if (tabEditor == null) return;
-                var t = typeof(DJWinOptimizer.Core.Models.ServiceToggles);
+                var t = typeof(PerformanceHub.Core.Models.ServiceToggles);
                 void Walk(System.Windows.Forms.Control.ControlCollection coll)
                 {
                     foreach (Control c in coll)
@@ -537,12 +537,12 @@ namespace DJWinOptimizer.UI
             catch { }
         }
 
-        private void TryReadServiceTagsFromEditor(DJWinOptimizer.Core.Models.ServiceToggles svc)
+        private void TryReadServiceTagsFromEditor(PerformanceHub.Core.Models.ServiceToggles svc)
         {
             try
             {
                 if (tabEditor == null) return;
-                var t = typeof(DJWinOptimizer.Core.Models.ServiceToggles);
+                var t = typeof(PerformanceHub.Core.Models.ServiceToggles);
                 void Walk(System.Windows.Forms.Control.ControlCollection coll)
                 {
                     foreach (Control c in coll)
@@ -573,24 +573,24 @@ namespace DJWinOptimizer.UI
             chkStartMinimized.CheckedChanged += (_, __) =>
             {
                 App.Instance!.Config.StartMinimizedToTray = chkStartMinimized.Checked;
-                DJWinOptimizer.Settings.AppSettings.Save(App.Instance.Config);
+                PerformanceHub.Settings.AppSettings.Save(App.Instance.Config);
             };
 
             chkAutoStartAutoSwitch.CheckedChanged += (_, __) =>
             {
                 App.Instance!.Config.AutoStartAutoSwitch = chkAutoStartAutoSwitch.Checked;
-                DJWinOptimizer.Settings.AppSettings.Save(App.Instance.Config);
+                PerformanceHub.Settings.AppSettings.Save(App.Instance.Config);
             };
 
             chkStartWithWindows.CheckedChanged += (_, __) =>
             {
                 App.Instance!.Config.StartWithWindows = chkStartWithWindows.Checked;
-                DJWinOptimizer.Settings.AppSettings.Save(App.Instance.Config);
-                if (!DJWinOptimizer.Utils.AutostartUtil.TrySetEnabled(chkStartWithWindows.Checked, Application.ExecutablePath, out var err))
+                PerformanceHub.Settings.AppSettings.Save(App.Instance.Config);
+                if (!PerformanceHub.Utils.AutostartUtil.TrySetEnabled(chkStartWithWindows.Checked, Application.ExecutablePath, out var err))
                 {
                     MessageBox.Show(this, $"Failed to update startup setting: {err}", "Autostart", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     // reflect actual state if error
-                    chkStartWithWindows.Checked = DJWinOptimizer.Utils.AutostartUtil.IsEnabled();
+                    chkStartWithWindows.Checked = PerformanceHub.Utils.AutostartUtil.IsEnabled();
                 }
             };
 
@@ -1661,7 +1661,7 @@ namespace DJWinOptimizer.UI
             App.Instance.Config.Hotkeys.ToggleAutoSwitch = txtHKToggle.Text.Trim();
             App.Instance.Config.Hotkeys.ShowHideWindow = txtHKShowHide.Text.Trim();
             App.Instance.Config.Hotkeys.ApplySelectedProfile = txtHKApplyProfile.Text.Trim();
-            DJWinOptimizer.Settings.AppSettings.Save(App.Instance.Config);
+            PerformanceHub.Settings.AppSettings.Save(App.Instance.Config);
 
             // Register each if parsable
             var failures = new System.Text.StringBuilder();
@@ -1811,7 +1811,7 @@ namespace DJWinOptimizer.UI
             _trayBalloonShown = true;
             try
             {
-                trayIcon.BalloonTipTitle = "DJ Win Optimizer";
+                trayIcon.BalloonTipTitle = "PerformanceHub";
                 trayIcon.BalloonTipText = "Running in the system tray. Double-click the icon to open.";
                 trayIcon.ShowBalloonTip(3000);
             }
@@ -1851,7 +1851,7 @@ namespace DJWinOptimizer.UI
         {
             try
             {
-                trayIcon.BalloonTipTitle = "DJ Win Optimizer";
+                trayIcon.BalloonTipTitle = "PerformanceHub";
                 trayIcon.BalloonTipText = text;
                 trayIcon.ShowBalloonTip(2000);
             }
@@ -2080,7 +2080,7 @@ namespace DJWinOptimizer.UI
             if (cboPowerPlans != null && cboPowerPlans.SelectedItem is PlanItem it)
                 p.PowerPlanGuid = it.Guid;
 
-            if (p.Services == null) p.Services = new DJWinOptimizer.Core.Models.ServiceToggles();
+            if (p.Services == null) p.Services = new PerformanceHub.Core.Models.ServiceToggles();
             if (chkSvcSysMain != null) p.Services.DisableSysMain = chkSvcSysMain.Checked;
             if (chkSvcSearchIndex != null) p.Services.DisableSearchIndex = chkSvcSearchIndex.Checked;
             if (chkSvcPrintSpooler != null) p.Services.DisablePrintSpooler = chkSvcPrintSpooler.Checked;
@@ -2103,7 +2103,7 @@ namespace DJWinOptimizer.UI
             if (nudPriority != null) p.Priority = (int)nudPriority.Value;
 
             // Save Autostart list
-            p.Programs ??= new DJWinOptimizer.Core.Models.ProgramSets();
+            p.Programs ??= new PerformanceHub.Core.Models.ProgramSets();
             p.Programs.LaunchOnEnter = EditorAutoCollectItems();
 
             App.Instance!.Profiles.Save(p);

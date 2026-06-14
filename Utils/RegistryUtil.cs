@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Win32;
 
-namespace DJWinOptimizer.Utils
+namespace PerformanceHub.Utils
 {
     public static class RegistryUtil
     {

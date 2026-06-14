@@ -1,4 +1,4 @@
-namespace DJWinOptimizer.Core.Models
+namespace PerformanceHub.Core.Models
 {
     public class ServiceToggles
     {

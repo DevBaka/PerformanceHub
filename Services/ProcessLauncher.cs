@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Core.Models;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Core.Models;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class ProcessLauncher : IProcessLauncher
     {

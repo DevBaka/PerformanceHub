@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Core.Models;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Core.Models;
 
-namespace DJWinOptimizer.UI
+namespace PerformanceHub.UI
 {
     public partial class TweaksControl : UserControl
     {

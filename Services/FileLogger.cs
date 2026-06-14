@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Utils;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class FileLogger : ILogger
     {
@@ -35,7 +35,7 @@ namespace DJWinOptimizer.Services
                     var logLine = $"[{DateTime.Now:HH:mm:ss}] {level} {message}";
                     File.AppendAllText(_logFile, logLine + Environment.NewLine);
                     OnLog?.Invoke(logLine);
-                    DJWinOptimizer.Core.App.InvokeLog(logLine);
+                    PerformanceHub.Core.App.InvokeLog(logLine);
                 }
                 catch { /* never crash on logging */ }
             }

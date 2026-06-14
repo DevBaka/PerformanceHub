@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace DJWinOptimizer.UI
+namespace PerformanceHub.UI
 {
     partial class MainForm
     {
@@ -237,10 +237,10 @@ namespace DJWinOptimizer.UI
             var chkSvcActivity = new CheckBox { Text = "Disable activity history (admin)", AutoSize = true, Location = new System.Drawing.Point(380, y) };
             y += 12;
             // attach to fields via Tag for code-behind access (avoid new fields explosion)
-            chkSvcXbox.Tag = nameof(DJWinOptimizer.Core.Models.ServiceToggles.DisableXboxServices);
-            chkSvcTelemetry.Tag = nameof(DJWinOptimizer.Core.Models.ServiceToggles.ReduceTelemetry);
-            chkSvcConsumer.Tag = nameof(DJWinOptimizer.Core.Models.ServiceToggles.DisableConsumerFeatures);
-            chkSvcActivity.Tag = nameof(DJWinOptimizer.Core.Models.ServiceToggles.DisableActivityHistory);
+            chkSvcXbox.Tag = nameof(PerformanceHub.Core.Models.ServiceToggles.DisableXboxServices);
+            chkSvcTelemetry.Tag = nameof(PerformanceHub.Core.Models.ServiceToggles.ReduceTelemetry);
+            chkSvcConsumer.Tag = nameof(PerformanceHub.Core.Models.ServiceToggles.DisableConsumerFeatures);
+            chkSvcActivity.Tag = nameof(PerformanceHub.Core.Models.ServiceToggles.DisableActivityHistory);
             // Tooltips
             toolTip = new ToolTip(components);
             toolTip.SetToolTip(chkSvcXbox, "Stops Xbox* services: XblAuthManager, XblGameSave, XboxNetApiSvc, XboxGipSvc.");
@@ -470,7 +470,7 @@ namespace DJWinOptimizer.UI
             tabSettings.Controls.Add(lblHKToggleStatus);
 
             // Tray icon
-            trayIcon.Text = "DJ Win Optimizer";
+            trayIcon.Text = "PerformanceHub";
             trayIcon.Icon = System.Drawing.SystemIcons.Application;
             trayIcon.Visible = true;
             trayIcon.DoubleClick += (s, e) => { Show(); WindowState = FormWindowState.Normal; Activate(); };
@@ -492,7 +492,7 @@ namespace DJWinOptimizer.UI
             ClientSize = new System.Drawing.Size(700, 420);
             Controls.Add(tabControl);
             Controls.Add(statusStrip);
-            Text = "DJ Win Optimizer";
+            Text = "PerformanceHub";
             Resize += MainForm_Resize;
             FormClosing += MainForm_FormClosing;
 

@@ -1,6 +1,6 @@
-# DJ Win Optimizer (Portable)
+# PerformanceHub (Portable)
 
-Portable Windows optimization tool for Streamers, Gamers and DJs. Built with C# WinForms (.NET 8).
+Portable Windows optimization tool for Streamers, Gamers and Power Users. Built with C# WinForms (.NET 8).
 
 ## Run (Development)
 - Install .NET 8 SDK.

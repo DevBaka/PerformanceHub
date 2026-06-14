@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Core.Models;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Core.Models;
+using PerformanceHub.Utils;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class ProfileManager : IProfileManager
     {
@@ -18,7 +18,7 @@ namespace DJWinOptimizer.Services
             _log = log;
             try
             {
-                var dir = DJWinOptimizer.Utils.PortablePaths.ProfilesDir;
+                var dir = PerformanceHub.Utils.PortablePaths.ProfilesDir;
                 if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
                 var existingFiles = System.IO.Directory.EnumerateFiles(dir, "*.json").ToList();
                 _log.Info($"ProfilesDir: '{dir}', existing profile files: {existingFiles.Count}");
@@ -230,7 +230,7 @@ namespace DJWinOptimizer.Services
         {
             try
             {
-                var dir = DJWinOptimizer.Utils.PortablePaths.ProfilesDir;
+                var dir = PerformanceHub.Utils.PortablePaths.ProfilesDir;
                 if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
                 // Only create defaults if the directory truly has no .json files
                 if (!System.IO.Directory.EnumerateFiles(dir, "*.json").Any())

@@ -1,6 +1,6 @@
-using DJWinOptimizer.Utils;
+using PerformanceHub.Utils;
 
-namespace DJWinOptimizer.Settings
+namespace PerformanceHub.Settings
 {
     public class AppSettings
     {

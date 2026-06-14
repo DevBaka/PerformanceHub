@@ -1,9 +1,9 @@
 using System;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Services;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Services;
+using PerformanceHub.Utils;
 
-namespace DJWinOptimizer.Core
+namespace PerformanceHub.Core
 {
     /// <summary>
     /// App-wide service locator for the prototype. In a larger app, prefer DI.
@@ -64,12 +64,12 @@ namespace DJWinOptimizer.Core
         public IAudioManager Audio { get; }
         public IPackageManager PackageManager { get; }
         public ISystemTweaksManager SystemTweaks { get; }
-        public DJWinOptimizer.Settings.AppSettings Config { get; }
+        public PerformanceHub.Settings.AppSettings Config { get; }
 
         private App()
         {
             Logger = new FileLogger();
-            Config = DJWinOptimizer.Settings.AppSettings.Load();
+            Config = PerformanceHub.Settings.AppSettings.Load();
             Profiles = new ProfileManager(Logger);
             PowerPlans = new PowerPlanService(Logger);
             ServiceManager = new WindowsServiceManager(Logger);

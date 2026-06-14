@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace DJWinOptimizer.UI
+namespace PerformanceHub.UI
 {
     public class ProgressForm : Form
     {

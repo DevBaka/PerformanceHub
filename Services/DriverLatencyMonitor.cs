@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Utils;
 using Microsoft.Diagnostics.Tracing;
 using Microsoft.Diagnostics.Tracing.Parsers;
 using Microsoft.Diagnostics.Tracing.Parsers.Kernel;
 using Microsoft.Diagnostics.Tracing.Session;
 using Microsoft.Diagnostics.Tracing.Stacks;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     // Collects ETW-based DPC/ISR activity and aggregates entries.
     // Note: First iteration aggregates by Task/Event name ("DPC"/"Interrupt").
@@ -181,7 +181,7 @@ namespace DJWinOptimizer.Services
                 }
 
                 // Use our own real-time kernel session so we can enable keywords reliably
-                var sessionName = "DJWinOptimizerKernel";
+                var sessionName = "PerformanceHubKernel";
                 _session = new TraceEventSession(sessionName) { StopOnDispose = true };
                 // Enable all kernel keywords
                 _session.EnableKernelProvider(KernelTraceEventParser.Keywords.All);

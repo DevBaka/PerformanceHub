@@ -1,7 +1,7 @@
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Core.Models;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Core.Models;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class AudioManager : IAudioManager
     {

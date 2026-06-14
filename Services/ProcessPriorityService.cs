@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DJWinOptimizer.Core.Interfaces;
+using PerformanceHub.Core.Interfaces;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class ProcessPriorityService : IProcessPriorityService
     {

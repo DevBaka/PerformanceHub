@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.ServiceProcess;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Core.Models;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Core.Models;
+using PerformanceHub.Utils;
 using Microsoft.Win32;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class WindowsServiceManager : IServiceManager
     {
@@ -796,7 +796,7 @@ namespace DJWinOptimizer.Services
                 // Use Task Scheduler to start OneDrive under the user context (limited rights), then delete the task
                 var quotedExe = exePath.Contains(' ') ? $"\"{exePath}\"" : exePath;
                 var tr = $"{quotedExe} {args}".Trim();
-                var taskName = "DJWinOptimizer_StartOneDrive_Once";
+                var taskName = "PerformanceHub_StartOneDrive_Once";
                 var startTime = DateTime.Now.AddSeconds(10).ToString("HH:mm");
                 var createArgs = $"/Create /F /SC ONCE /ST {startTime} /RL LIMITED /TN {taskName} /TR \"{tr}\"";
                 if (!AdminUtil.TryRunProcess("schtasks", createArgs, 8000, out _)) return false;

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using DJWinOptimizer.Core.Models;
+using PerformanceHub.Core.Models;
 
-namespace DJWinOptimizer.Core.Interfaces
+namespace PerformanceHub.Core.Interfaces
 {
     public interface ILogger
     {

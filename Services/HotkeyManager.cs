@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using DJWinOptimizer.Core.Interfaces;
+using PerformanceHub.Core.Interfaces;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class HotkeyManager : NativeWindow, IHotkeyManager
     {

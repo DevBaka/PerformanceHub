@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Security.Principal;
 
-namespace DJWinOptimizer.Utils
+namespace PerformanceHub.Utils
 {
     public static class AdminUtil
     {

@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using DJWinOptimizer.Core.Interfaces;
+using PerformanceHub.Core.Interfaces;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class PowerPlanService : IPowerPlanService
     {

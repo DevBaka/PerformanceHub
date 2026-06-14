@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace DJWinOptimizer.UI
+namespace PerformanceHub.UI
 {
     partial class ProfileEditorForm
     {

@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DJWinOptimizer.Utils
+namespace PerformanceHub.Utils
 {
     public static class JsonUtil
     {

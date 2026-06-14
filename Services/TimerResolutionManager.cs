@@ -1,8 +1,8 @@
 using System;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Utils;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class TimerResolutionManager : ITimerResolutionManager
     {

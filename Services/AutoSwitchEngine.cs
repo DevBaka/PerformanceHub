@@ -2,10 +2,10 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Timers;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Core.Models;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Core.Models;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class AutoSwitchEngine : IAutoSwitchEngine, IDisposable
     {
@@ -37,7 +37,7 @@ namespace DJWinOptimizer.Services
                                    .Select(n => System.IO.Path.GetFileNameWithoutExtension(n))
                                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-                bool Matches(DJWinOptimizer.Core.Models.Profile p)
+                bool Matches(PerformanceHub.Core.Models.Profile p)
                 {
                     // Normalize helpers
                     bool HasAny(IEnumerable<string>? list)
@@ -53,7 +53,7 @@ namespace DJWinOptimizer.Services
                     return hasAny && hasAll;
                 }
 
-                int Specificity(DJWinOptimizer.Core.Models.Profile p)
+                int Specificity(PerformanceHub.Core.Models.Profile p)
                 {
                     int a = p.TargetsAll?.Count ?? 0;
                     int o = p.TargetsAny?.Count ?? 0;

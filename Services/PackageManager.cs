@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using DJWinOptimizer.Core.Interfaces;
-using DJWinOptimizer.Core.Models;
-using DJWinOptimizer.Utils;
+using PerformanceHub.Core.Interfaces;
+using PerformanceHub.Core.Models;
+using PerformanceHub.Utils;
 
-namespace DJWinOptimizer.Services
+namespace PerformanceHub.Services
 {
     public class PackageManager : IPackageManager
     {

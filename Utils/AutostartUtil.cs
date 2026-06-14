@@ -1,12 +1,12 @@
 using System;
 using Microsoft.Win32;
 
-namespace DJWinOptimizer.Utils
+namespace PerformanceHub.Utils
 {
     public static class AutostartUtil
     {
         private const string RunKeyPath = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-        private const string ValueName = "DJWinOptimizer";
+        private const string ValueName = "PerformanceHub";
 
         public static bool IsEnabled()
         {
