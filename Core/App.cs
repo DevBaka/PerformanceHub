@@ -64,6 +64,7 @@ namespace PerformanceHub.Core
         public IAudioManager Audio { get; }
         public IPackageManager PackageManager { get; }
         public ISystemTweaksManager SystemTweaks { get; }
+        public IVibranceService Vibrance { get; }
         public PerformanceHub.Settings.AppSettings Config { get; }
 
         private App()
@@ -83,6 +84,7 @@ namespace PerformanceHub.Core
             Audio = new AudioManager(Logger);
             PackageManager = new PackageManager(Logger);
             SystemTweaks = new SystemTweaksManager(Logger);
+            Vibrance = new VibranceService(Logger);
         }
 
         public void Shutdown()

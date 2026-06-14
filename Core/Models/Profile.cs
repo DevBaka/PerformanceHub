@@ -18,6 +18,7 @@ namespace PerformanceHub.Core.Models
         public int Priority { get; set; }
         public AudioOptimizations Audio { get; set; } = new();
         public TimerResolutionMode TimerResolution { get; set; } = TimerResolutionMode.Stock;
+        public VibranceSettings Vibrance { get; set; } = new();
         public ProgramSets Programs { get; set; } = new();
         public List<PackageManagerAction> PackageActions { get; set; } = new();
         public List<TweakAction> TweakActions { get; set; } = new();
@@ -27,6 +28,12 @@ namespace PerformanceHub.Core.Models
     {
         public bool EnableWasapiExclusive { get; set; }
         public bool PreferAsioIfAvailable { get; set; }
+    }
+
+    public class VibranceSettings
+    {
+        public bool Enabled { get; set; }
+        public int Level { get; set; } = 0; // 0-100 range
     }
 
     public enum TimerResolutionMode { Stock, OneMs }

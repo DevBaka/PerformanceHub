@@ -1979,6 +1979,13 @@ namespace PerformanceHub.UI
                 TryApplyServiceTagsToEditor(p.Services);
             }
 
+            // Vibrance settings
+            if (p.Vibrance != null)
+            {
+                if (chkVibranceEnabled != null) chkVibranceEnabled.Checked = p.Vibrance.Enabled;
+                if (trkVibranceLevel != null) trkVibranceLevel.Value = p.Vibrance.Level;
+            }
+
             // Targets lists (OR/AND) and Priority
             if (lstTargetsAny != null) lstTargetsAny.Items.Clear();
             if (lstTargetsAll != null) lstTargetsAll.Items.Clear();
@@ -2205,6 +2212,11 @@ namespace PerformanceHub.UI
             if (chkSvcGameDvr != null) p.Services.DisableGameDvr = chkSvcGameDvr.Checked;
             // Read any Tag-mapped checkboxes back into ServiceToggles
             TryReadServiceTagsFromEditor(p.Services);
+
+            // Vibrance settings
+            if (p.Vibrance == null) p.Vibrance = new PerformanceHub.Core.Models.VibranceSettings();
+            if (chkVibranceEnabled != null) p.Vibrance.Enabled = chkVibranceEnabled.Checked;
+            if (trkVibranceLevel != null) p.Vibrance.Level = trkVibranceLevel.Value;
 
             // Save targets (OR/AND) and priority
             if (lstTargetsAny != null)

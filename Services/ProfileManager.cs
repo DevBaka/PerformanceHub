@@ -148,6 +148,14 @@ namespace PerformanceHub.Services
                 // Audio preset (best-effort)
                 if (!Core.App.Instance!.Audio.ApplyPreset(profile.Audio, out var audioErr) && !string.IsNullOrWhiteSpace(audioErr))
                     _log.Warn($"Audio apply: {audioErr}");
+                // Vibrance settings
+                if (profile.Vibrance != null && profile.Vibrance.Enabled)
+                {
+                    if (!Core.App.Instance!.Vibrance.TrySetVibrance(profile.Vibrance.Level, out var vibranceErr))
+                        _log.Warn($"Vibrance apply failed: {vibranceErr}");
+                    else
+                        _log.Info($"Vibrance set to {profile.Vibrance.Level}");
+                }
                 // Launch programs
                 Core.App.Instance!.Launcher.Launch(profile.Programs?.LaunchOnEnter ?? new());
                 
@@ -200,6 +208,15 @@ namespace PerformanceHub.Services
                 Core.App.Instance!.ProcPriority.Revert(profile.ProcessPriorities);
                 // Restore timer resolution to stock
                 try { Core.App.Instance!.TimerResolution.SetOneMillisecond(false); } catch { }
+                
+                // Restore vibrance to 0 (default)
+                if (profile.Vibrance != null && profile.Vibrance.Enabled)
+                {
+                    if (!Core.App.Instance!.Vibrance.TrySetVibrance(0, out var vibranceErr))
+                        _log.Warn($"Vibrance revert failed: {vibranceErr}");
+                    else
+                        _log.Info("Vibrance restored to default (0)");
+                }
                 
                 // Undo system tweaks
                 if (profile.TweakActions != null && profile.TweakActions.Count > 0)

@@ -105,4 +105,11 @@ namespace PerformanceHub.Core.Interfaces
         List<TweakResult> ExecuteActions(IEnumerable<TweakAction> actions);
         bool IsTweakApplied(string tweakId);
     }
+
+    public interface IVibranceService
+    {
+        bool TrySetVibrance(int level, out string? error);
+        int? GetCurrentVibrance();
+        bool IsAvailable();
+    }
 }

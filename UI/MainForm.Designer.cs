@@ -61,6 +61,8 @@ namespace PerformanceHub.UI
         private CheckBox chkSvcOneDriveStop;
         private CheckBox chkSvcWindowsUpdates;
         private CheckBox chkSvcGameDvr;
+        private CheckBox chkVibranceEnabled;
+        private TrackBar trkVibranceLevel;
         private ListBox lstTargetsAny;
         private ListBox lstTargetsAll;
         private TextBox txtTargetAny;
@@ -249,6 +251,16 @@ namespace PerformanceHub.UI
             toolTip.SetToolTip(chkSvcActivity, "Disables Activity History collection and upload via policy.");
             y += 12;
             tabEditor.Controls.AddRange(new Control[] { chkSvcSysMain, chkSvcSearchIndex, chkSvcPrintSpooler, chkSvcDefenderRealtime, chkSvcOneDrivePause, chkSvcWindowsUpdates, chkSvcGameDvr, chkSvcOneDriveStop, chkSvcXbox, chkSvcTelemetry, chkSvcConsumer, chkSvcActivity });
+
+            // Vibrance settings
+            y += 16;
+            tabEditor.Controls.Add(new Label { Text = "NVIDIA Vibrance:", AutoSize = true, Location = new System.Drawing.Point(10, y) });
+            chkVibranceEnabled = new CheckBox { Text = "Enable", AutoSize = true, Location = new System.Drawing.Point(120, y) };
+            trkVibranceLevel = new TrackBar { Location = new System.Drawing.Point(200, y - 4), Width = 200, Minimum = 0, Maximum = 100, TickFrequency = 10 };
+            tabEditor.Controls.Add(chkVibranceEnabled);
+            tabEditor.Controls.Add(trkVibranceLevel);
+            toolTip.SetToolTip(chkVibranceEnabled, "Enable NVIDIA Digital Vibrance for this profile");
+            toolTip.SetToolTip(trkVibranceLevel, "Vibrance level (0-100)");
 
             // Targets management (OR / AND) and Priority
             tabEditor.Controls.Add(new Label { Text = "Targets (OR):", AutoSize = true, Location = new System.Drawing.Point(10, y) });
