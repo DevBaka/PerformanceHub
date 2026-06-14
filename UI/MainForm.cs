@@ -14,6 +14,7 @@ namespace PerformanceHub.UI
 {
     public partial class MainForm : Form
     {
+        private bool _isRefreshingPowerPlans = false;
         private readonly System.Windows.Forms.Timer _uiTimer = new();
         private ToolStripMenuItem? _trayAutoSwitchItem;
         private ToolStripMenuItem? _trayShowHideItem;
@@ -660,6 +661,11 @@ namespace PerformanceHub.UI
                         }
                         catch { }
                         RefreshStatus();
+                        // Refresh power plan UI to reflect actual system state
+                        if (tabEditor != null && tabEditor.IsDisposed == false)
+                        {
+                            EditorRefreshPlans();
+                        }
                         // Verify power plan if specified
                         var p = App.Instance!.Profiles.GetByName(name);
                         if (p != null && !string.IsNullOrWhiteSpace(p.PowerPlanGuid))
@@ -670,6 +676,10 @@ namespace PerformanceHub.UI
                                 AppendLog($"Warning: Active power plan did not match requested GUID {p.PowerPlanGuid}. Current active: {active ?? "(unknown)"}");
                                 MessageBox.Show(this, "Der Energieplan konnte möglicherweise nicht übernommen werden. Prüfe Administratorrechte und versuche es erneut.",
                                     "Energieplan nicht aktiv", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                            else
+                            {
+                                AppendLog($"Power plan successfully set to: {active}");
                             }
                         }
                         EndOperation($"Applied: {name}");
@@ -1937,14 +1947,20 @@ namespace PerformanceHub.UI
             // Select profile's configured power plan if present
             if (!string.IsNullOrWhiteSpace(p.PowerPlanGuid) && cboPowerPlans != null)
             {
+                bool found = false;
                 for (int i = 0; i < cboPowerPlans.Items.Count; i++)
                 {
                     if (cboPowerPlans.Items[i] is PlanItem it &&
                         string.Equals(it.Guid, p.PowerPlanGuid, StringComparison.OrdinalIgnoreCase))
                     {
                         cboPowerPlans.SelectedIndex = i;
+                        found = true;
                         break;
                     }
+                }
+                if (!found)
+                {
+                    AppendLog($"Profile's power plan GUID {p.PowerPlanGuid} not found on this system. Please select a different plan.");
                 }
             }
 
@@ -1986,20 +2002,75 @@ namespace PerformanceHub.UI
             try
             {
                 if (cboPowerPlans == null) return;
+                _isRefreshingPowerPlans = true;
+                var previouslySelected = cboPowerPlans.SelectedItem as PlanItem;
                 cboPowerPlans.Items.Clear();
                 foreach (var (guid, name, active) in App.Instance!.PowerPlans.GetAvailablePlans())
                 {
                     cboPowerPlans.Items.Add(new PlanItem(guid, name, active));
                 }
-                if (cboPowerPlans.Items.Count > 0 && cboPowerPlans.SelectedIndex < 0)
-                    cboPowerPlans.SelectedIndex = 0;
+                // Restore previous selection if it still exists
+                if (previouslySelected != null)
+                {
+                    for (int i = 0; i < cboPowerPlans.Items.Count; i++)
+                    {
+                        if (cboPowerPlans.Items[i] is PlanItem it && string.Equals(it.Guid, previouslySelected.Guid, StringComparison.OrdinalIgnoreCase))
+                        {
+                            cboPowerPlans.SelectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                // If nothing selected and we have items, select the active one
+                if (cboPowerPlans.SelectedIndex < 0 && cboPowerPlans.Items.Count > 0)
+                {
+                    var activeGuid = App.Instance.PowerPlans.GetActiveGuid();
+                    if (activeGuid != null)
+                    {
+                        for (int i = 0; i < cboPowerPlans.Items.Count; i++)
+                        {
+                            if (cboPowerPlans.Items[i] is PlanItem it && string.Equals(it.Guid, activeGuid, StringComparison.OrdinalIgnoreCase))
+                            {
+                                cboPowerPlans.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    // If still nothing selected, select the first item
+                    if (cboPowerPlans.SelectedIndex < 0)
+                        cboPowerPlans.SelectedIndex = 0;
+                }
                 // Update active label
-                var activeGuid = App.Instance.PowerPlans.GetActiveGuid();
-                if (lblActivePlan != null) lblActivePlan.Text = activeGuid != null ? $"Active: {activeGuid}" : "Active: -";
+                var activeGuid2 = App.Instance.PowerPlans.GetActiveGuid();
+                if (lblActivePlan != null)
+                {
+                    if (activeGuid2 != null)
+                    {
+                        // Try to find the name for the active GUID
+                        var activeName = "Unknown";
+                        for (int i = 0; i < cboPowerPlans.Items.Count; i++)
+                        {
+                            if (cboPowerPlans.Items[i] is PlanItem it && string.Equals(it.Guid, activeGuid2, StringComparison.OrdinalIgnoreCase))
+                            {
+                                activeName = it.Name;
+                                break;
+                            }
+                        }
+                        lblActivePlan.Text = $"Active: {activeName} ({activeGuid2})";
+                    }
+                    else
+                    {
+                        lblActivePlan.Text = "Active: -";
+                    }
+                }
             }
             catch (Exception ex)
             {
                 AppendLog($"Failed to refresh power plans: {ex.Message}");
+            }
+            finally
+            {
+                _isRefreshingPowerPlans = false;
             }
         }
 
@@ -2016,16 +2087,51 @@ namespace PerformanceHub.UI
                     if (cboPowerPlans.Items[i] is PlanItem it && string.Equals(it.Guid, active, StringComparison.OrdinalIgnoreCase))
                     {
                         cboPowerPlans.SelectedIndex = i;
+                        AppendLog($"Selected current power plan: {it.Name}");
                         return;
                     }
                 }
                 // Not in list: add ephemeral entry
                 cboPowerPlans.Items.Add(new PlanItem(active, "Current", true));
                 cboPowerPlans.SelectedIndex = cboPowerPlans.Items.Count - 1;
+                AppendLog($"Current power plan {active} not in available list, added as ephemeral entry.");
             }
             catch (Exception ex)
             {
                 AppendLog($"Use current plan failed: {ex.Message}");
+            }
+        }
+
+        private void EditorPowerPlanChanged()
+        {
+            try
+            {
+                // Prevent recursive calls
+                if (_isRefreshingPowerPlans)
+                    return;
+
+                if (cboPowerPlans == null || cboPowerPlans.SelectedItem is not PlanItem it)
+                    return;
+
+                var guid = it.Guid;
+                var name = it.Name;
+
+                // Try to set the power plan immediately
+                if (App.Instance!.PowerPlans.TrySetActive(guid, out var error))
+                {
+                    AppendLog($"Power plan changed to: {name} ({guid})");
+                    // Refresh to show updated active state (but prevent recursion)
+                    EditorRefreshPlans();
+                }
+                else
+                {
+                    AppendLog($"Failed to set power plan to {name}: {error}");
+                    MessageBox.Show(this, $"Failed to set power plan: {error}", "Power Plan Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"Power plan change failed: {ex.Message}");
             }
         }
 
@@ -2078,7 +2184,15 @@ namespace PerformanceHub.UI
             if (txtProfName != null && !string.IsNullOrWhiteSpace(txtProfName.Text)) p.Name = txtProfName.Text.Trim();
             if (txtProfDesc != null) p.Description = string.IsNullOrWhiteSpace(txtProfDesc.Text) ? null : txtProfDesc.Text.Trim();
             if (cboPowerPlans != null && cboPowerPlans.SelectedItem is PlanItem it)
+            {
                 p.PowerPlanGuid = it.Guid;
+                AppendLog($"Profile power plan set to: {it.Name} ({it.Guid})");
+            }
+            else
+            {
+                p.PowerPlanGuid = null;
+                AppendLog($"Profile power plan cleared");
+            }
 
             if (p.Services == null) p.Services = new PerformanceHub.Core.Models.ServiceToggles();
             if (chkSvcSysMain != null) p.Services.DisableSysMain = chkSvcSysMain.Checked;

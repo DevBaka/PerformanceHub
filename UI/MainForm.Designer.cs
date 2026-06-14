@@ -287,6 +287,7 @@ namespace PerformanceHub.UI
             btnPlanRefresh.Click += (s, e) => EditorRefreshPlans();
             btnPlanUseCurrent.Click += (s, e) => EditorUseCurrentPlan();
             btnPlanClone.Click += (s, e) => EditorCloneSelectedPlan();
+            cboPowerPlans.SelectedIndexChanged += (s, e) => EditorPowerPlanChanged();
             btnEditorSave.Click += (s, e) => EditorSaveProfile();
             btnEditorApply.Click += (s, e) => ApplySelectedProfile();
 
