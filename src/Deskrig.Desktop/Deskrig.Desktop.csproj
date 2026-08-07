@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Avalonia itself would happily build under a single plain net8.0 TFM - but Deskrig.Core is
+         multi-targeted, and a ProjectReference always resolves to the referencing project's own TFM. A
+         single net8.0 TFM here would therefore always pull Core's net8.0 (Linux-backend) build, even when
+         actually running on Windows - silently throwing PlatformNotSupportedException there instead of
+         using the real Windows backends. Mirroring Core/Cli's TargetFrameworks makes `dotnet publish -f
+         net8.0-windows -r win-x64` and `-f net8.0 -r linux-x64` each pull the matching Core build. -->
+    <TargetFrameworks>net8.0-windows;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Deskrig.Desktop</RootNamespace>
+    <AssemblyName>Deskrig</AssemblyName>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationManifest Condition="'$(TargetFramework)'=='net8.0-windows'">app.manifest</ApplicationManifest>
+    <!-- Windows-only pieces (global hotkeys, DWM dark title bar) are small P/Invoke blocks gated at
+         runtime via OperatingSystem.IsWindows(), same pattern Core's platform-neutral files already use -
+         no #if needed in this project itself, only the TFM split above for the ProjectReference. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.13" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.13" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.13" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.13" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.13" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.13" Condition="'$(Configuration)'=='Debug'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Deskrig.Core\Deskrig.Core.csproj" />
+  </ItemGroup>
+
+</Project>

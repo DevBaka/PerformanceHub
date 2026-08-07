@@ -1,0 +1,93 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Deskrig.Desktop.Views.MainWindow"
+        Title="Deskrig" Height="650" Width="950" MinHeight="450" MinWidth="700"
+        Background="{StaticResource Brush.Window}" Foreground="{StaticResource Brush.Foreground}">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="180"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="0">
+            <TabItem Header="Display-Profile">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox Name="DisplayProfileList" Grid.Column="0"
+                             ItemsSource="{Binding DisplayProfiles}"
+                             SelectedItem="{Binding SelectedDisplayProfile}"
+                             DoubleTapped="DisplayProfileList_DoubleTapped">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Grid.Column="1" Margin="8,0,0,0" Width="170">
+                        <Button Content="Anwenden" Click="ApplyDisplayProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Dry-Run" Click="DryRunDisplayProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Separator Margin="0,8"/>
+                        <Button Content="Neu (aktuelle Anordnung)" Click="NewDisplayProfileFromCurrent_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Neu (leer)" Click="NewDisplayProfileEmpty_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Bearbeiten" Click="EditDisplayProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Löschen" Click="DeleteDisplayProfile_Click" HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="System-Profile">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox Name="SystemProfileList" Grid.Column="0"
+                             ItemsSource="{Binding SystemProfiles}"
+                             SelectedItem="{Binding SelectedSystemProfile}"
+                             DoubleTapped="SystemProfileList_DoubleTapped">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Grid.Column="1" Margin="8,0,0,0" Width="170">
+                        <Button Content="Anwenden" Click="ApplySystemProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Dry-Run" Click="DryRunSystemProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Separator Margin="0,8"/>
+                        <Button Content="Neu" Click="NewSystemProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Bearbeiten" Click="EditSystemProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Duplizieren" Click="DuplicateSystemProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Button Content="Löschen" Click="DeleteSystemProfile_Click" HorizontalAlignment="Stretch"/>
+                        <Separator Margin="0,8"/>
+                        <Button Content="Restore Previous" Click="RestorePrevious_Click" HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Row="1" Background="{StaticResource Brush.Panel}" BorderBrush="{StaticResource Brush.Border}"
+                BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Log" FontWeight="SemiBold" Foreground="{StaticResource Brush.Accent}" Margin="2,0,0,8"/>
+                <Button Grid.Row="1" Content="Log kopieren" HorizontalAlignment="Right" Click="CopyLog_Click"/>
+                <TextBox Grid.Row="2" Name="LogTextBox" Text="{Binding LogText, Mode=OneWay}"
+                         FontFamily="Consolas,monospace" FontSize="11" IsReadOnly="True"
+                         TextWrapping="NoWrap" AcceptsReturn="True"
+                         VerticalContentAlignment="Top"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="2" Text="{Binding StatusText}" Margin="4" Opacity="0.8"/>
+    </Grid>
+</Window>

@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-windows;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Deskrig.Core</RootNamespace>
+    <AssemblyName>Deskrig.Core</AssemblyName>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <!-- Selects which backend types actually exist to reference at compile time - the six *Service facades
+       each pick their platform backend behind a couple of lines of #if, everything else in the codebase
+       stays free of platform conditionals. -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
+    <DefineConstants>$(DefineConstants);DESKRIG_WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0'">
+    <DefineConstants>$(DefineConstants);DESKRIG_LINUX</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Windows-only backends (CCD display API, CoreAudio, ServiceController, Registry) only make sense -
+       and only compile cleanly against their native-Windows package versions - under the net8.0-windows
+       TFM. The Linux backends (xrandr/pactl/powerprofilesctl/systemctl, all driven via Process, no special
+       package needed) are excluded there and included only under plain net8.0. -->
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
+    <Compile Remove="**/Platform/Linux/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows'">
+    <Compile Remove="**/Platform/Windows/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
+    <PackageReference Include="AudioSwitcher.AudioApi.CoreAudio" Version="3.0.3" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="8.0.0" />
+    <PackageReference Include="WindowsDisplayAPI" Version="1.3.0.13" />
+  </ItemGroup>
+
+</Project>

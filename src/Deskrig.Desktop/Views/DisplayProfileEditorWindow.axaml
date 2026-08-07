@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:Deskrig.Desktop.Infrastructure"
+        x:Class="Deskrig.Desktop.Views.DisplayProfileEditorWindow"
+        Title="Display-Profil bearbeiten" Height="500" Width="960"
+        Background="{StaticResource Brush.Window}" Foreground="{StaticResource Brush.Foreground}"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+            <TextBlock Text="Name:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+            <TextBox Name="NameBox" Width="260"/>
+            <TextBlock Text="Beschreibung:" VerticalAlignment="Center" Margin="16,0,6,0"/>
+            <TextBox Name="DescriptionBox" Width="300"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="Aktuelle Anordnung laden" Click="LoadCurrent_Click"/>
+            <TextBlock Text="Displays mit gleicher Nummer bei 'Spiegeln mit' zeigen dasselbe Bild (Clone); 0 = eigenständig erweitert. Auflösung/Hz/Skalierung über 'Modus...' bearbeiten."
+                       VerticalAlignment="Center" Margin="16,0,0,0" Opacity="0.7" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" Name="Grid" AutoGenerateColumns="False" CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <!-- Template column instead of a plain DataGridTextColumn: the resolved name can be a fair
+                     bit longer now (e.g. "Unbekanntes Display (DP-1)" when no EDID is available at all -
+                     see XrandrDisplayBackend), so it needs to ellipsize with the full text still reachable
+                     via tooltip instead of just silently clipping mid-word. -->
+                <DataGridTemplateColumn Header="Monitor" Width="220" CanUserResize="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FriendlyNameHint}" ToolTip.Tip="{Binding FriendlyNameHint}"
+                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="4,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridCheckBoxColumn Header="Aktiv" Binding="{Binding Active}" Width="45"/>
+                <DataGridCheckBoxColumn Header="Primär" Binding="{Binding Primary}" Width="50"/>
+                <DataGridTextColumn Header="X" Binding="{Binding PositionX}" Width="55"/>
+                <DataGridTextColumn Header="Y" Binding="{Binding PositionY}" Width="55"/>
+                <DataGridTextColumn Header="Auflösung" Binding="{Binding Converter={x:Static conv:ResolutionConverter.Instance}}" IsReadOnly="True" Width="80"/>
+                <DataGridTextColumn Header="Hz" Binding="{Binding RefreshRateHz}" IsReadOnly="True" Width="50"/>
+                <DataGridTextColumn Header="Skalierung" Binding="{Binding DpiScalePercent, Converter={x:Static conv:DpiScaleConverter.Instance}}" IsReadOnly="True" Width="70"/>
+                <DataGridTemplateColumn Header="" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Modus..." Padding="6,2" FontSize="11" Click="EditMode_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Spiegeln mit" Binding="{Binding Group}" Width="80"/>
+                <DataGridTextColumn Header="Hardware-Id" Binding="{Binding HardwareId}" IsReadOnly="True" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Speichern" Width="90" Click="Save_Click" IsDefault="True"/>
+            <Button Content="Abbrechen" Width="90" Click="Cancel_Click" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

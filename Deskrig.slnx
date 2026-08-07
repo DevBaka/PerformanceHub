@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Deskrig.Cli/Deskrig.Cli.csproj" />
+    <Project Path="src/Deskrig.Core/Deskrig.Core.csproj" />
+    <Project Path="src/Deskrig.Desktop/Deskrig.Desktop.csproj" />
+  </Folder>
+</Solution>

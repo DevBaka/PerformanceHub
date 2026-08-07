@@ -1,0 +1,27 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Deskrig.Desktop.App"
+             RequestedThemeVariant="Dark">
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+    </Application.Styles>
+
+    <Application.Resources>
+        <!-- ===== Palette - same values as the old WPF theme, applied as explicit Background/Foreground on
+             views instead of full custom ControlTemplates (FluentTheme's own dark-variant chrome for
+             buttons/combos/etc. already looks right; we only need to re-skin panel/window backgrounds and
+             the accent color to match). ===== -->
+        <SolidColorBrush x:Key="Brush.Window" Color="#1E1F22" />
+        <SolidColorBrush x:Key="Brush.Panel" Color="#26282C" />
+        <SolidColorBrush x:Key="Brush.Control" Color="#313338" />
+        <SolidColorBrush x:Key="Brush.Border" Color="#454952" />
+        <SolidColorBrush x:Key="Brush.BorderSubtle" Color="#3A3C41" />
+        <SolidColorBrush x:Key="Brush.Foreground" Color="#E3E5E8" />
+        <SolidColorBrush x:Key="Brush.ForegroundMuted" Color="#9AA0A6" />
+        <SolidColorBrush x:Key="Brush.Accent" Color="#5B8DEF" />
+        <SolidColorBrush x:Key="Brush.Selection" Color="#37415A" />
+
+        <Color x:Key="SystemAccentColor">#5B8DEF</Color>
+    </Application.Resources>
+</Application>
