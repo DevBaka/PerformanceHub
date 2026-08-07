@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ProfileDeck.Cli/ProfileDeck.Cli.csproj" />
+    <Project Path="src/ProfileDeck.Core/ProfileDeck.Core.csproj" />
+    <Project Path="src/ProfileDeck.Wpf/ProfileDeck.Wpf.csproj" />
+  </Folder>
+</Solution>

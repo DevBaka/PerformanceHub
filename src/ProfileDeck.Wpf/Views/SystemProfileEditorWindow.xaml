@@ -1,0 +1,141 @@
+<Window x:Class="ProfileDeck.Wpf.Views.SystemProfileEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="System-Profil bearbeiten" Height="820" Width="920" WindowStartupLocation="CenterOwner"
+        Background="#1E1F22" Foreground="#E3E5E8">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <GroupBox Header="Allgemein">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Name:" VerticalAlignment="Center" Width="120"/>
+                            <TextBox x:Name="NameBox" Width="260"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Beschreibung:" VerticalAlignment="Center" Width="120"/>
+                            <TextBox x:Name="DescriptionBox" Width="400"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Display-Profil:" VerticalAlignment="Center" Width="120"/>
+                            <ComboBox x:Name="DisplayProfileCombo" Width="220"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Hotkey:" VerticalAlignment="Center" Width="120"/>
+                            <TextBox x:Name="HotkeyBox" Width="180" ToolTip="z.B. Ctrl+Alt+D1"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Programme starten (Reihenfolge per Drag &amp; Drop)">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <Button Content="Aus laufenden Prozessen / Datei..." Click="AddProgram_Click"/>
+                            <Button Content="Entfernen" Click="RemoveProgram_Click"/>
+                        </StackPanel>
+                        <DataGrid x:Name="ProgramsGrid" AutoGenerateColumns="False" CanUserAddRows="False"
+                                  Height="180" AllowDrop="True"
+                                  PreviewMouseLeftButtonDown="ProgramsGrid_PreviewMouseLeftButtonDown"
+                                  PreviewMouseMove="ProgramsGrid_PreviewMouseMove"
+                                  Drop="ProgramsGrid_Drop">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Pfad" Binding="{Binding Path}" Width="220"/>
+                                <DataGridTextColumn Header="Argumente" Binding="{Binding Arguments}" Width="120"/>
+                                <DataGridTextColumn Header="Arbeitsverz." Binding="{Binding WorkingDirectory}" Width="120"/>
+                                <DataGridTextColumn Header="Delay (ms)" Binding="{Binding DelayAfterMs}" Width="70"/>
+                                <DataGridTextColumn Header="Priorität" Binding="{Binding Priority}" Width="80"/>
+                                <DataGridCheckBoxColumn Header="Admin" Binding="{Binding RunAsAdmin}" Width="50"/>
+                                <DataGridCheckBoxColumn Header="Warten auf Fenster" Binding="{Binding WaitForWindow}" Width="60"/>
+                                <DataGridCheckBoxColumn Header="Skip falls läuft" Binding="{Binding SkipIfAlreadyRunning}" Width="60"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Prozesse beenden (vor dem Start)">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <Button Content="Aus laufenden Prozessen..." Click="AddKillProcess_Click"/>
+                            <Button Content="Manuell hinzufügen" Click="AddKillProcessManual_Click"/>
+                            <Button Content="Entfernen" Click="RemoveKillProcess_Click"/>
+                        </StackPanel>
+                        <ListBox x:Name="KillList" Height="70"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Windows-Dienste">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <Button Content="Dienst hinzufügen..." Click="AddService_Click"/>
+                            <Button Content="Entfernen" Click="RemoveService_Click"/>
+                        </StackPanel>
+                        <DataGrid x:Name="ServicesGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="120">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Dienst" Binding="{Binding ServiceName}" Width="200" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Ziel-Status (NoChange/Start/Stop)" Binding="{Binding DesiredState}" Width="220"/>
+                                <DataGridTextColumn Header="Starttyp (leer/Automatic/Manual/Disabled)" Binding="{Binding StartupType}" Width="260"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Windows-Einstellungen">
+                    <StackPanel x:Name="SettingsPanel"/>
+                </GroupBox>
+
+                <GroupBox Header="Power-Plan &amp; Prozessor-Scheduling">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Power-Plan:" VerticalAlignment="Center" Width="160"/>
+                            <ComboBox x:Name="PowerPlanCombo" Width="260"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Prozessor-Scheduling:" VerticalAlignment="Center" Width="160"/>
+                            <ComboBox x:Name="SchedulingCombo" Width="260"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Prozess-Priorität (laufende Prozesse)">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <Button Content="Aus laufenden Prozessen..." Click="AddPriority_Click"/>
+                            <Button Content="Entfernen" Click="RemovePriority_Click"/>
+                        </StackPanel>
+                        <DataGrid x:Name="PriorityGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="100">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Prozess" Binding="{Binding ProcessName}" Width="220"/>
+                                <DataGridTextColumn Header="Priorität (Idle/BelowNormal/Normal/AboveNormal/High/Realtime)" Binding="{Binding Priority}" Width="300"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Audio">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Standard-Ausgabe:" VerticalAlignment="Center" Width="160"/>
+                            <ComboBox x:Name="AudioOutputCombo" Width="320"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Standard-Eingabe:" VerticalAlignment="Center" Width="160"/>
+                            <ComboBox x:Name="AudioInputCombo" Width="320"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Speichern" Width="90" Click="Save_Click" IsDefault="True"/>
+            <Button Content="Abbrechen" Width="90" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

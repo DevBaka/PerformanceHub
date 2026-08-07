@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ProfileDeck.Wpf</RootNamespace>
+    <AssemblyName>ProfileDeck</AssemblyName>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProfileDeck.Core\ProfileDeck.Core.csproj" />
+  </ItemGroup>
+
+  <!-- UseWindowsForms pulls in a global "using System.Windows.Forms;" that clashes with WPF's own
+       Button/TextBox/MessageBox/Application/etc. We only need WinForms for the tray icon (NotifyIcon),
+       so drop the blanket global using and reference System.Windows.Forms explicitly where needed. -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
+
+
+</Project>
